@@ -1,0 +1,33 @@
+bazel_dep(name = "rules_scala", version = "7.2.4")
+bazel_dep(name = "rules_jvm_external", version = "6.10")
+
+# Scala
+scala_config = use_extension(
+    "@rules_scala//scala/extensions:config.bzl",
+    "scala_config",
+)
+scala_config.settings(scala_version = "3.3.7")
+
+scala_deps = use_extension(
+    "@rules_scala//scala/extensions:deps.bzl",
+    "scala_deps",
+)
+
+scala_deps.scala()
+
+# External Java dependencies
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+
+maven.install(
+    artifacts = [
+      #"org.typelevel:cats-effect_3:3.6.3",
+      #"org.typelevel:cats-mtl_3:1.6.0",
+      "com.lihaoyi:os-lib_3:0.11.9-M7"
+    ],
+    lock_file = "//:maven_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+
+)
+use_repo(maven, "maven")
